@@ -1,0 +1,811 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="icon" href="{% static 'images/favicon.png' %}">
+    
+    <title>Airline Booking</title>
+
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        nav{
+            padding: 0px 0px;
+        }
+
+        .navbar-default{
+            background-color: white;
+        }
+
+        .navbar{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-nav li{
+            margin-left: 7rem;
+        }
+
+
+        section{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .yes{
+            position: relative;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .yes img{
+            position: absolute;
+            left: 0;
+            top: 1;
+            width: 100%;
+            height: 80%;
+            object-fit: fill;
+            z-index: -1;
+        }
+
+        .container .jumbotron{
+            border-radius: 20px; 
+        }
+
+        .jumbotron{
+            background-color: #03427F;
+            opacity: 0.9;
+        }
+
+        form{
+            padding-top: 35px;
+        }
+
+
+        .carousel{
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .carousel img{
+            border-radius: 20px;
+            overflow: hidden;
+            object-fit: fill;
+        }
+
+
+        .flight-letter{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .flight-letter img{
+            position: absolute;
+            z-index: -1;
+            width: 100%;
+            height: 60%;
+            object-fit: fill;
+            border-radius: 20px;
+        }
+
+        .flight-letter .btn-link{
+            color: #fff;
+            text-decoration: none;
+        }
+
+
+        footer div p a, footer ul li a, footer div a{
+            color: rgb(109, 132, 148);
+        }
+
+        footer a:hover{
+            text-decoration: none;
+            color: #03427F;
+        }
+
+        .footer-down{
+            margin: 50px 0; 
+            display: flex; 
+            justify-content: space-between;
+        }
+
+
+        @media screen and ((max-width: 992px) and (min-width: 769px)){
+           
+        }
+
+
+        @media screen and ((max-width: 768px) and (min-width: 601px)){
+            .navbar{
+                display:inline-block;            
+            }
+            
+            .yes .alert{
+                margin-top: 40px;
+                margin-bottom: -10px;
+            }
+        }
+
+
+        @media(max-width: 600px){
+            .navbar{
+                display:inline-block;            
+            }
+
+            .yes .alert{
+                margin-top: 50px;
+                margin-bottom: -10px;
+            }
+
+            .footer-down{
+                flex-direction: column;
+                line-height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>  
+    <!-- Modal for alert message -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Welcome</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    Airline-Booking is a software project built with major operations on the user sign-up, sign-in, flight booking and offer news subscription. Do enjoy your browsing experience. Thank you.
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- navigation bar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#">
+                <img src="{% static 'images/favicon.png' %}" alt="flight-booking" width="160" height="90" />
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav" >
+                <li class="disabled" style="visibility: hidden;"><a href="#">Support</a></li>  <!-- not showing -->
+
+                <li><a href="{% url 'home' %}">Flights</a></li>
+                <li><a href="{% url 'home' %}">Hotels</a></li>
+
+                {% if user.is_authenticated %}
+                    <li><a style="text-transform: capitalize;"><span class="glyphicon glyphicon-user"></span> {{user.username}}</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+                    <li><a href="{% url 'register' %}">Sign up</a></li>
+                {% endif %}
+            </ul> 
+        </div>
+    </nav>
+
+
+
+    <section class="yes">
+        <img src="{% static 'images/flying_1.jpg' %}" alt="airplane" id="bg">
+
+        {% for message in messages %}
+            {% if message.tags != "success" %}
+
+            <div class="alert alert-danger alert-dismissible fade in" style="padding: 15px 30px 15px 20px;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>{{message}}
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-{{message.tags}} alert-dismissible fade in" style="padding: 15px 30px 15px 20px;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>{{message}}
+            </div>
+
+            {% endif %}
+        {% endfor %}
+
+        <h3 style="margin-bottom: 25px; font-weight: bold;">Search and Book your Flights and Hotels here...</h3>
+    
+        <div class="container">
+            <div class="jumbotron"> 
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#1" data-toggle="tab"><span class="glyphicon glyphicon-plane"></span> &ensp; Book Flights</a>
+                    </li>
+                    <li>
+                        <a href="#2" data-toggle="tab"><span class="glyphicon glyphicon-home"></span> &ensp; Find Hotel</a>
+                    </li>
+                </ul>             
+
+                <!-- book flights -->
+                <div class="tab-content">
+                    <div id="1" class="tab-pane active">
+                        <form action="{% url 'booking_filter' %}" method="POST" id="search">
+                            {% csrf_token %}
+                            
+                            <div class="row" style="margin-bottom: 30px;">
+                                <div class="col-sm-3 col-xs-12" style="margin-right: -20px; margin-bottom: 5px;">
+                                    <select name="trip_round" id="" class="form-control" required>
+                                        <option value="">Select trip round</option>
+                                        {% for trip in rounds %}
+                                            <option value="{{trip.id}}">{{trip.title}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+        
+                                <div class="col-sm-3 col-xs-12">
+                                    <select name="flight" id="" class="form-control" required>
+                                        <option value="">Select flight class</option>   
+                                        {% for flight in flights %}
+                                            <option value="{{flight.id}}">{{flight.name}}</option>   
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+        
+                            <div class="row">
+                                <div class="col-sm-4 col-xs-12" style="margin-right: -10px; margin-bottom: 5px;">
+                                    <select name="depart_from" id="" class="form-control input-lg" required>
+                                        <option value="">Depart from</option>   
+                                        {% for location in locations %}
+                                            <option value="{{location.id}}">{{location.name}}</option>   
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-4 col-xs-12" style="margin-right: -35px; margin-bottom: 5px;">
+                                    <select name="destination" id="" class="form-control input-lg" required>
+                                        <option value="">Destination</option>   
+                                        {% for location in locations %}
+                                            <option value="{{location.id}}">{{location.name}}</option>   
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="col-xs-2">
+                                    <button type="submit" class="btn btn-lg" style="border-radius: 5px; border: 1px solid green;">Let's go</button>
+                                </div>
+                            </div>
+                    
+                            <!-- <input type="date" name="" placeholder="Departure Date" id="" class=""> -->
+                        </form>
+                    </div>
+
+
+                    <!-- find hotel -->
+                    <div id="2" class="tab-pane">
+                        <form action="{% url 'hotel_filter' %}" method="POST" id="search">
+                            {% csrf_token %}
+                            
+                            <div class="row" style="margin-bottom: 30px;">
+                                <div class="col-sm-3 col-xs-12" style="margin-right: -20px; margin-bottom: 5px;">
+                                    <select name="city" id="" class="form-control" required>
+                                        <option value="">Choose city, destination</option>
+                                        {% for city in cities %}
+                                            <option value="{{city.id}}">{{city.name}}</option>   
+                                        {% endfor %}
+                                    </select>
+                                </div>
+        
+                                <div class="col-sm-3 col-xs-12">
+                                    <select name="room" id="" class="form-control" required>
+                                        <option value="">Select number of rooms</option>  
+                                        {% for room in rooms %}
+                                            <option value="{{room.id}}">{{room.number}}</option>   
+                                        {% endfor %} 
+                                    </select>
+                                </div>
+                            </div>
+        
+                            <div class="row">
+                                <div class="col-sm-4 col-xs-12" style="margin-right: -5px; margin-bottom: 5px;">
+                                    <input type="date" placeholder="Check-in" name="check_in" id="" class="form-control input-lg" required>
+                                </div>
+                                
+                                <div class="col-xs-2">
+                                    <button type="submit" class="btn btn-lg">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div> <br>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- flight -->
+    <div class="container">
+        <h3 style="font-weight: 700; margin: 0px 0px 25px;">Monumental Flight Deals</h3>
+
+        <div id="flight_carousel" class="carousel slide" data-ride="carousel" data-interval="0" style="margin-bottom: 60px;">          
+            <div class="carousel-inner">
+
+                <div class="item active">
+                    <div class="row">
+                        <div class="col-sm-4 col-xs-12">
+                            <img src="{% static 'images/london.jpg' %}" width="100%" height="300px" alt="London flight">
+                            <div class="carousel-caption">
+
+                                <!-- <h4 style="font-weight: 700;">Flight to London</h4>
+                                <i>Best experience...</i> -->
+
+                                <form action="" method="POST">
+                                    <div style="display: flex; flex-direction: column; text-align: left; margin-top: 30px;">
+
+                                        <div style="display: flex; align-items: center;">
+                                            <h4 style="padding-right: 15px;">Lagos</h4> 
+                                            <span class="glyphicon glyphicon-arrow-right"></span> 
+                                            <h4 style="padding-left: 15px; font-weight: 700;">London</h4>
+                                        </div>
+            
+                                        <p>12 Dec 2023 - 14 Jan 2024</p>
+
+                                        <!-- <br> -->
+        
+                                        <h6 style="margin: 40px 0px 0px;">Pay now</h6>
+
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <h4>NGN 310,000</h4>
+
+                                            <button type="submit" class="btn btn-link">
+                                                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                                                <svg fill="#000000" width="40px" height="30px" viewBox="0 0 24 24" id="right-arrow" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                                    <path id="primary" d="M3,12H21m-3,3,3-3L18,9" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-xs-12">
+                            <img src="{% static 'images/accra_2.jpg' %}" width="100%" height="300px" alt="Accra flight">
+                            <div class="carousel-caption">
+                                <!-- <h4 style="font-weight: 700;">Akwa-Ibom to Accra</h4>
+                                <i>African heritage tour...</i> -->
+
+                                <form action="" method="POST">
+                                    <div style="display: flex; flex-direction: column; text-align: left; margin-top: 30px;">
+
+                                        <div style="display: flex; align-items: center;">
+                                            <h4 style="padding-right: 15px;">Akwa-Ibom</h4> 
+                                            <span class="glyphicon glyphicon-arrow-right"></span> 
+                                            <h4 style="padding-left: 15px; font-weight: 700;">Accra</h4>
+                                        </div>
+            
+                                        <p>15 Dec 2023 - 10 Jan 2024</p>
+        
+                                        <h6 style="margin: 40px 0px 0px;">Pay now</h6>
+
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <h4>NGN 200,000</h4>
+
+                                            <button type="submit" class="btn btn-link">
+                                                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                                                <svg fill="#000000" width="40px" height="30px" viewBox="0 0 24 24" id="right-arrow" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                                    <path id="primary" d="M3,12H21m-3,3,3-3L18,9" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-xs-12">
+                            <img src="{% static 'images/paris.jpg' %}" width="100%" height="300px" alt="paris flight"> 
+                            <div class="carousel-caption">
+                                <!-- <h4 style="font-weight: 700;">Abuja to Paris</h4>
+                                <i>Book your business trip...</i> -->
+
+                                <form action="" method="POST">
+                                    <div style="display: flex; flex-direction: column; text-align: left; margin-top: 30px;">
+
+                                        <div style="display: flex; align-items: center;">
+                                            <h4 style="padding-right: 15px;">Abuja</h4> 
+                                            <span class="glyphicon glyphicon-arrow-right"></span> 
+                                            <h4 style="padding-left: 15px; font-weight: 700;">Paris</h4>
+                                        </div>
+            
+                                        <p>20 Dec 2023 - 5 Jan 2024</p>
+        
+                                        <h6 style="margin: 40px 0px 0px;">Pay now</h6>
+
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <h4>NGN 350,000</h4>
+
+                                            <button type="submit" class="btn btn-link">
+                                                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                                                <svg fill="#000000" width="40px" height="30px" viewBox="0 0 24 24" id="right-arrow" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                                    <path id="primary" d="M3,12H21m-3,3,3-3L18,9" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="item">
+                    <div class="row">
+
+                        <div class="col-sm-4 col-xs-12">
+                            <img src="{% static 'images/abijan.jpg' %}" width="100%" height="300px" alt="Jerusalem trip">
+                            <div class="carousel-caption">
+                                <!-- <h4 style="font-weight: 700;">Abijan to Jerusalem</h4>
+                                <i>Pilgrimage tour...</i> -->
+
+                                <form action="" method="POST">
+                                    <div style="display: flex; flex-direction: column; text-align: left; margin-top: 30px;">
+
+                                        <div style="display: flex; align-items: center;">
+                                            <h4 style="padding-right: 15px;">Abijan</h4> 
+                                            <span class="glyphicon glyphicon-arrow-right"></span> 
+                                            <h4 style="padding-left: 15px; font-weight: 700;">Jerusalem</h4>
+                                        </div>
+            
+                                        <p>12 Dec 2023 - 20 Jan 2024</p>
+        
+                                        <h6 style="margin: 40px 0px 0px;">Pay now</h6>
+
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <h4>NGN 370,000</h4>
+
+                                            <button type="submit" class="btn btn-link">
+                                                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                                                <svg fill="#000000" width="40px" height="30px" viewBox="0 0 24 24" id="right-arrow" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                                    <path id="primary" d="M3,12H21m-3,3,3-3L18,9" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-xs-12">
+                            <img src="{% static 'images/akwa_ibom.jpg' %}" width="100%" height="300px" alt="Lagos to Akwa-Ibom">
+                            <div class="carousel-caption">
+                                <!-- <h4 style="font-weight: 700;">Lagos to Akwa-Ibom</h4>
+                                <i>Enjoy your flight without passport...</i> -->
+
+                                <form action="" method="POST">
+                                    <div style="display: flex; flex-direction: column; text-align: left; margin-top: 30px;">
+
+                                        <div style="display: flex; align-items: center;">
+                                            <h4 style="padding-right: 15px;">Lagos</h4> 
+                                            <span class="glyphicon glyphicon-arrow-right"></span> 
+                                            <h4 style="padding-left: 15px; font-weight: 700;">Akwa-Ibom</h4>
+                                        </div>
+            
+                                        <p>20 Dec 2023 - 10 Jan 2024</p>
+        
+                                        <h6 style="margin: 40px 0px 0px;">Pay now</h6>
+
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <h4>NGN 110,000</h4>
+
+                                            <button type="submit" class="btn btn-link">
+                                                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                                                <svg fill="#000000" width="40px" height="30px" viewBox="0 0 24 24" id="right-arrow" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                                    <path id="primary" d="M3,12H21m-3,3,3-3L18,9" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-xs-12">
+                            <img src="{% static 'images/pretoria.jpg' %}" width="100%" height="300px" alt="Pretoria Flight">
+                            <div class="carousel-caption">
+                                <!-- <h4 style="font-weight: 700;">New-York to Pretoria</h4>
+                                <i>Explore the world...</i> -->
+
+                                <form action="" method="POST">
+                                    <div style="display: flex; flex-direction: column; text-align: left; margin-top: 30px;">
+
+                                        <div style="display: flex; align-items: center;">
+                                            <h4 style="padding-right: 15px;">New-York</h4> 
+                                            <span class="glyphicon glyphicon-arrow-right"></span> 
+                                            <h4 style="padding-left: 15px; font-weight: 700;">Pretoria</h4>
+                                        </div>
+            
+                                        <p>15 Dec 2023 - 17 Jan 2024</p>
+        
+                                        <h6 style="margin: 40px 0px 0px;">Pay now</h6>
+
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <h4>NGN 720,000</h4>
+
+                                            <button type="submit" class="btn btn-link">
+                                                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                                                <svg fill="#000000" width="40px" height="30px" viewBox="0 0 24 24" id="right-arrow" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                                    <path id="primary" d="M3,12H21m-3,3,3-3L18,9" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a class="left carousel-control" href="#flight_carousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+                
+            <a class="right carousel-control" href="#flight_carousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+
+
+    <!-- hotels -->
+    <div class="container">
+        <h3 style="font-weight: 700; margin-bottom: 25px;">Hotels in Amazing Locations</h3>
+
+        <div id="hotel_carousel" class="carousel slide" data-ride="carousel" data-interval="0">        
+            <div class="carousel-inner">
+
+                <div class="item active">
+                    <div class="row">
+
+                        <div class="col-sm-4">
+                            <img src="{% static 'images/hotel_lagos.jpg' %}" width="100%" height="300px">
+                            <div class="carousel-caption">
+                                <h3>Lagos Hotels</h3>
+                                <i>Living with style...</i>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <img src="{% static 'images/hotel_london.jpg' %}" width="100%" height="300px">
+                            <div class="carousel-caption">
+                                <h3>Best hotels in London</h3>
+                                <i>Luxury relaxation...</i>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <img src="{% static 'images/hotel_madrid.jpg' %}" width="100%" height="300px">
+                            <div class="carousel-caption">
+                                <h3>Madrid Villa</h3>
+                                <i>Enjoy your nourished stay...</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="row">
+
+                        <div class="col-sm-4">
+                            <img src="{% static 'images/hotel_ct.jpg' %}" width="100%" height="300px">
+                            <div class="carousel-caption">
+                                <h3>Capetown Lodges</h3>
+                                <i>Enjoy a monumental stay...</i>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <img src="{% static 'images/hotel_accra.jpg' %}" width="100%" height="300px">
+                            <div class="carousel-caption">
+                                <h3>Accra Rest House</h3>
+                                <i>Keep your life cool...</i>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <img src="{% static 'images/hotel_abijan.jpg' %}" width="100%" height="300px">
+                            <div class="carousel-caption">
+                                <h3>Abijan Hotels</h3>
+                                <i>Enjoying the world...</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a class="left carousel-control" href="#hotel_carousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+                
+            <a class="right carousel-control" href="#hotel_carousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+
+
+    <!-- flight letter -->
+    <div class="container">
+        <form action="{% url 'letter' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="flight-letter">
+                <img src="{% static 'images/flying_11.jpg' %}" alt="news letter">
+                
+                <h2 style="font-weight: 700; color: #fff;">Stay on top of every offer</h2>
+
+                <p style="font-size: 17px; color: #fff; margin: 30px 0 20px;">Subscribe now and be the first to access our exclusive offers!</p>
+                     
+                <div class="col-sm-6 col-xs-10">
+                    <input type="text" placeholder="Enter your email" class="form-control" name="newsletter_email" style="padding: 25px; margin-bottom: 20px; font-size: 20px;">
+                </div>
+
+                <div style="margin: 0 0 40px; color: #fff;">
+                    <input type="checkbox"><span> I would like to get offers and news. I have read and understood the <a href="" style="text-decoration: underline; color: #fff;">privacy notice</a></span>
+                </div>
+
+                <button class="btn btn-link" style="border-radius: 30px; border: 1px solid #fff; padding: 10px 60px; font-size: 20px;">Subscribe</button> 
+            </div>
+        </form>
+    </div>
+
+
+
+    <!-- footer -->
+    <footer style="background-color: #f1f4f7;">
+        <div class="container">
+            <p class="col-sm-offset-4" style="padding-top: 60px; font-size: 16px; font-weight: 600;">Search for Flights, Hotels and Holidays packages</p>
+
+            <div class="row" style=" padding-bottom: 40px;">
+                <div class="col-sm-3" style=" text-align: center;">
+                    <img src="{% static 'images/favicon.png' %}" alt="flight-booking" width="160" height="90" />
+
+                    <p style="color: rgb(109, 132, 148); font-size: 15px; padding: 20px 0px 10px;">Let's stay connected</p>
+                    
+                    <ul class="list-inline" style="font-size: 23px;">
+                        <li><a href="https://www.facebook.com/profile.php?id=61550489822036" class="fa fa-facebook"></a></li>
+                        <li><a href="https://www.twitter.com/Oluwole_OBJ" class="fa fa-twitter"></a></li>
+                        <li><a href="https://www.instagram.com/lord_obj?igsh=dWt5dGw1dGU3MDZ5" class="fa fa-instagram"></a></li>
+                        <li><a href="https://www.linkedin.com/in/michael-oluwole" class="fa fa-linkedin"></a></li>
+                    </ul>
+                </div>
+
+                <div style="padding-top: 10px;">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <p style="font-size: 15px; font-weight: 600;">African Flights</p>
+                        <p><a href="">Flights to Lagos</a></p>
+                        <p><a href="">Flights to Accra</a></p>
+                        <p><a href="">Flights to Abijan</a></p>
+                        <p><a href="">Flights to Djibouti</a></p>
+
+                        <p style="font-size: 15px; font-weight: 600; padding-top: 35px;">African Hotels</p>
+                        <p><a href="">Hotels in Lagos</a></p>
+                        <p><a href="">Hotels in Accra</a></p>
+                        <p><a href="">Hotels in Abijan</a></p>
+                        <p><a href="">Hotels in Djibouti</a></p>
+                    </div>
+                    
+                    <div class="col-sm-2">
+                        <p style="font-size: 15px; font-weight: 600;">European Flights</p>
+                        <p><a href="">Flights to London</a></p>
+                        <p><a href="">Flights to Paris</a></p>
+                        <p><a href="">Flights to Berlin</a></p>
+                        <p><a href="">Flights to Madrid</a></p>
+
+                        <p style="font-size: 15px; font-weight: 600; padding-top: 35px;">European Hotels</p>
+                        <p><a href="">Hotels in London</a></p>
+                        <p><a href="">Hotels in Paris</a></p>
+                        <p><a href="">Hotels in Berlin</a></p>
+                        <p><a href="">Hotels in Madrid</a></p>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <p style="font-size: 15px; font-weight: 600;">Asian Flights</p>
+                        <p><a href="">Flights to Doha</a></p>
+                        <p><a href="">Flights to Dubai</a></p>
+                        <p><a href="">Flights to Beijing</a></p>
+                        <p><a href="">Flights to Hong Kong</a></p>
+
+                        <p style="font-size: 15px; font-weight: 600; padding-top: 35px;">Asian Hotels</p>
+                        <p><a href="">Hotels in Doha</a></p>
+                        <p><a href="">Hotels in Dubai</a></p>
+                        <p><a href="">Hotels in Beijing</a></p>
+                        <p><a href="">Hotels in Hong Kong</a></p>
+                    </div>
+
+                    <div class="col-sm-2"> 
+                        <p style="font-size: 15px; font-weight: 600;">American Flights</p>
+                        <p><a href="">Flights to New York</a></p>
+                        <p><a href="">Flights to Houston</a></p>
+                        <p><a href="">Flights to Atlanta</a></p>
+                        <p><a href="">Flights to Miami</a></p>
+
+                        <p style="font-size: 15px; font-weight: 600; padding-top: 35px;">American Hotels</p>
+                        <p><a href="">Hotels in New York</a></p>
+                        <p><a href="">Hotels in Houston</a></p>
+                        <p><a href="">Hotels in Atlanta</a></p>
+                        <p><a href="">Hotels in Miami</a></p>
+                    </div>
+                </div> 
+            </div>
+
+
+            <hr style="height: 2px; background-color: rgb(109, 132, 148);">
+
+            <div class="footer-down">
+                <div class="disabled">
+                    <a href="">Cookie policy</a> &ensp; &ensp; &ensp; 
+                    <a href="">Legal</a> &ensp; &ensp; &ensp;
+                    <a href="">Privacy policy</a> &ensp; &ensp; &ensp;
+                    <a href="">Accessibilty</a> &ensp; &ensp; &ensp;
+                    <a href="">Cookie consent</a>
+                </div>
+                <div>
+                    <p style="color: rgb(109, 132, 148);"> &copy; 2024 Airline-Booking. All rights reserved</p>
+                </div>
+            </div> 
+        </div>
+    </footer>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>   
+    <script>
+        (function checkCount(){
+            let count = localStorage.getItem("count")
+            if (!count){
+                showGreeting()
+                localStorage.setItem("count", 1)
+            }
+        }
+        )()
+
+        function showGreeting(){
+            $('#exampleModalCenter').modal('show')            
+        }
+
+    //    alert("Airline-Booking is a software project built with major operations on the user sign-up, sign-in, flight booking and offer news subscription. Do enjoy your browsing experience. Thank you.");  
+    </script>
+</body>
+</html>

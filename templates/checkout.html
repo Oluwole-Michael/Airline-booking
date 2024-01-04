@@ -1,0 +1,805 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="icon" href="{% static 'images/favicon.png' %}">
+
+    <title>Booking</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        nav{
+            padding: 0px 0px;
+        }
+
+        .navbar-default{
+            background-color: white;
+        }
+
+        .navbar{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-nav li{
+            margin-left: 7rem;
+        }
+
+
+        section{
+            position: relative;
+        }
+
+
+        .checkout{
+            margin-top: 150px;
+            margin-bottom: 100px;
+        }
+
+        .seat_no input{
+            margin: 20px 0px;
+        }
+
+
+        .booked{
+            background-color: #f1f5f5;
+            border-radius: 20px;
+            text-align: center;
+            padding: 20px 0px 30px;
+            font-size: 18px;
+        }
+
+
+        footer div p a, footer ul li a, footer div a{
+            color: rgb(109, 132, 148);
+        }
+
+        footer a:hover{
+            text-decoration: none;
+            color: #03427F;
+        }
+
+        .footer-down{
+            margin: 50px 0; 
+            display: flex; 
+            justify-content: space-between;
+        }
+
+
+        @media screen and ((max-width: 768px) and (min-width: 601px)){
+            .navbar{
+                display:inline-block;            
+            }
+        }
+
+
+        @media(max-width: 600px){
+            .navbar{
+                display:inline-block;            
+            }
+
+            .footer-down{
+                flex-direction: column;
+                line-height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a href="#">
+                <img src="{% static 'images/favicon.png' %}" alt="flight-booking" width="160" height="90"/>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="disabled" style="visibility: hidden;"><a href="#">Support</a></li>  <!-- not showing -->
+
+                <li><a href="{% url 'home' %}">Flights</a></li>
+                <li><a href="{% url 'home' %}">Hotels</a></li>
+
+                {% if user.is_authenticated %}         
+                    <li><a style="text-transform: capitalize;"><span class="glyphicon glyphicon-user"></span> {{user.username}}</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-user"></span> Login</a></li>  
+                    <li><a href="{% url 'register' %}">Sign up</a></li>
+                {% endif %}
+            </ul> 
+        </div>
+    </nav>
+
+
+
+
+
+
+    {% if book %}
+
+    <!-- flight -->
+        <section>   
+            <div class="checkout container">          
+
+                <div class="row">
+                    <div class="col-xs-8">
+                        <form action="{% url 'checkout' %}" method="POST" class="booking-form">
+                            {% csrf_token %}
+                                
+                            <div class="panel" > 
+                                <div class="panel-body" style="color: #03427F; background-color: #d8e4ef; border-radius: 5px;"> 
+                                    <span class="glyphicon glyphicon-info-sign"></span> &ensp; 
+                                    Let every information be the same as provided on your passport
+                                </div>
+                            </div>
+
+                            <div class="col-sm-10 col-sm-offset-1">
+
+                                {% for message in messages %}
+                                    {% if message.tags != "success" %}
+
+                                    <div class="alert alert-danger alert-dismissible fade in" style="padding: 15px 30px 15px 20px;">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>{{message}}
+                                    </div>
+
+                                    {% else %}
+
+                                    <div class="alert alert-{{message.tags}} alert-dismissible fade in" style="padding: 15px 30px 15px 20px;">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>{{message}}
+                                    </div>
+
+                                    {% endif %} 
+                                {% endfor %}
+
+                            {% if checking %}
+                                <input type="text" name="booking_id" value="{{checking.booking_id}}" hidden>
+
+                                <h3>Personal Information</h3>
+                                <div class="form-group">
+                                    <label for="first_name">First Name:</label>
+                                    <input type="text" name="first_name" id="" class="form-control" placeholder="First name" value="{{checking.first_name}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="last_name">Last Name:</label>
+                                    <input type="text" name="last_name" id="" class="form-control" placeholder="Last name" value="{{checking.last_name}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="middle_name">Middle Name:</label>
+                                    <input type="text" name="middle_name" id="" class="form-control" placeholder="Middle name" value="{{checking.middle_name}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nationality">Nationality:</label>
+
+                                    <select name="nationality" id="" class="form-control" required>
+                                        <option value="{{checking.nationality_id}}">{{checking.nationality_id}}</option>   
+                                    
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="date_of_birth">Date of Birth:</label>
+                                    <input type="date" name="date_of_birth" id="dateOfBirthId" class="form-control" placeholder="Date Of Birth" value="{{checking.date_of_birth}}" onchange="validateDateOfBirth(event)" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Gender:</label>
+
+                                    <select name="gender" id="" class="form-control" required>
+                                        <option value="{{checking.gender_id}}">{{checking.gender_id}}</option>   
+
+                                    </select>
+                                </div>
+
+                                <h3 style="padding: 20px 0px 10px;">Passport Details</h3>
+                                <div class="form-group">
+                                    <label for="passport_no">Passport No:</label>
+                                    <input type="text" name="passport_no" id="" class="form-control" placeholder="Passport No" value="{{checking.passport_no}}" required>
+                                </div>                            
+                                <div class="form-group">
+                                    <label for="passport_expiry_date">Passport Expiry Date:</label>
+                                    <input type="date" name="passport_expiry_date" id="expiryId" class="form-control" placeholder="Passport Expiry Date"  value="{{checking.passport_expiry_date}}" onchange="validatePassportExpiryDate(event)" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="passport_issuing_authority">Passport Issuing Authority:</label>
+
+                                    <select name="passport_issuing_authority" id="" class="form-control" required>
+                                        <option value="{{checking.passport_issuing_authority_id}}">{{checking.passport_issuing_authority_id}}</option>   
+                                        
+                                    </select>
+                                </div>
+
+                                <h3 style="padding: 20px 0px 10px;">Where should we send your confirmation?</h3>
+                                <div class="form-group">
+                                    <label for="contact">Contact:</label>
+                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. 08017****78" maxlength="11" minlength="11" max="99999999999" min="0" value="{{checking.contact}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" name="email" id="" class="form-control" placeholder="Email" value="{{checking.mail}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Address:</label>
+                                    <input type="text" name="address" id="" class="form-control" placeholder="Address" value="{{checking.address}}" required>
+                                </div>
+
+                                <div class="seat_no" style="padding-top: 20px;">
+                                    <input type="number" name="seat_no" id="" class="form-control" placeholder="Specific seat number is not available" value="" readonly>                                
+
+                                    <div>
+                                        <p style="margin-bottom: 10px;"> <b>NB: </b> Each extra luggage is NGN {{book.each_extra_luggage_price|intcomma}}</p>
+
+                                        <p style="margin-bottom: -15px;">Number of Luggage</p>
+                                        <input type="number" name="extra_luggage_quantity" id="extraLuggageQuantity" class="form-control" placeholder="Number of Luggage" min="0" value="{{checking.extra_luggage_quantity}}" onchange="calculatePrice(event)">    
+                                    </div>
+                                    
+                                    <div hidden>
+                                        <p style="margin-bottom: -15px;">Each Extra Luggage Amount</p>
+                                        <input type="number" name="each_extra_luggage_price" id="eachExtraLuggageAmount" class="form-control" placeholder="Each Extra Luggage Price" value="{{book.each_extra_luggage_price}}" readonly>
+                                    </div>
+                                    
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Extra Luggage Amount</p>
+                                        <input type="number" name="extra_luggage_price" id="extraLuggageAmount" class="form-control" placeholder="Extra Luggage Price" value="{{checking.extra_luggage_price}}" readonly>
+                                    </div>
+
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Flight Amount</p>
+                                        <input type="number" name="flight_fare" id="flightAmount" class="form-control" placeholder="Flight Fare" value="{{book.price}}" readonly>
+                                    </div>
+
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Total Amount</p>
+                                        <input type="number" name="total_fare" id="totalAmount" class="form-control" placeholder="Total Fare" value="{{checking.total_fare}}" readonly>
+                                    </div>
+                                </div>
+
+                            {% else %}
+
+                            
+                                <input type="text" name="booking_id" value="{{book.id}}" hidden>
+
+                                <h3>Personal Information</h3>
+                                <div class="form-group">
+                                    <label for="first_name">First Name:</label>
+                                    <input type="text" name="first_name" id="" class="form-control" placeholder="First name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="last_name">Last Name:</label>
+                                    <input type="text" name="last_name" id="" class="form-control" placeholder="Last name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="middle_name">Middle Name:</label>
+                                    <input type="text" name="middle_name" id="" class="form-control" placeholder="Middle name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="nationality">Nationality:</label>
+
+                                    <select name="nationality" id="" class="form-control" required>
+                                        <option value="">Select Nationality</option>   
+                                        {% for nation in nations %}
+                                            <option value="{{nation.id}}">{{nation.name}}</option>   
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="date_of_birth">Date of Birth:</label>
+                                    <input type="date" name="date_of_birth" id="dateOfBirthId" class="form-control" placeholder="Date Of Birth" onchange="validateDateOfBirth(event)" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Gender:</label>
+
+                                    <select name="gender" id="" class="form-control" required>
+                                        <option value="">Select Gender</option>   
+                                        {% for gender in genders %}
+                                            <option value="{{gender.id}}">{{gender.type}}</option>   
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <h3 style="padding: 20px 0px 10px;">Passport Details</h3>
+                                <div class="form-group">
+                                    <label for="passport_no">Passport No:</label>
+                                    <input type="text" name="passport_no" id="" class="form-control" placeholder="Passport No" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="passport_expiry_date">Passport Expiry Date:</label>
+                                    <input type="date" name="passport_expiry_date" id="expiryId" class="form-control" placeholder="Passport Expiry Date" onchange="validatePassportExpiryDate(event)" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="passport_issuing_authority">Passport Issuing Authority:</label>
+
+                                    <select name="passport_issuing_authority" id="" class="form-control" required>
+                                        <option value="">Select Passport Issuing Authority</option>   
+                                        {% for nation in nations %}
+                                            <option value="{{nation.id}}">{{nation.name}}</option>   
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <h3 style="padding: 20px 0px 10px;">Where should we send your confirmation?</h3>
+                                <div class="form-group">
+                                    <label for="contact">Contact:</label>
+                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. 08017****78" maxlength="11" minlength="11" max="99999999999" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" name="email" id="" class="form-control" placeholder="Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Address:</label>
+                                    <input type="text" name="address" id="" class="form-control" placeholder="Address" required>
+                                </div>
+                                
+                                <div class="seat_no" style="padding-top: 20px;">
+                                    <input type="number" name="seat_no" id="" class="form-control" placeholder="Specific seat number is not available" value="" readonly>
+
+                                    <div>
+                                        <p style="margin-bottom: 10px;"> <b>NB: </b> Each extra luggage is NGN {{book.each_extra_luggage_price|intcomma}}</p>
+
+                                        <p style="margin-bottom: -15px;">Number of Luggage</p>
+                                        <input type="number" name="extra_luggage_quantity" id="extraLuggageQuantity" class="form-control" placeholder="Number of Luggage" min="0" value="0" onchange="calculatePrice(event)">    
+                                    </div>
+                                    
+                                    <div hidden>
+                                        <p style="margin-bottom: -15px;">Each Extra Luggage Amount</p>
+                                        <input type="number" name="each_extra_luggage_price" id="eachExtraLuggageAmount" class="form-control" placeholder="Each Extra Luggage Price" value="{{book.each_extra_luggage_price}}" readonly>
+                                    </div>
+                                    
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Extra Luggage Amount</p>
+                                        <input type="number" name="extra_luggage_price" id="extraLuggageAmount" class="form-control" placeholder="Extra Luggage Price" value="0" readonly>
+                                    </div>
+
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Flight Amount</p>
+                                        <input type="number" name="flight_fare" id="flightAmount" class="form-control" placeholder="Flight Fare" value="{{book.price}}" readonly>
+                                    </div>
+
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Total Amount</p>
+                                        <input type="number" name="total_fare" id="totalAmount" class="form-control" placeholder="Total Fare" value="{{book.price}}" readonly>
+                                    </div>
+                                </div>
+                            {% endif %}
+                
+                                <button type="submit" class="btn btn-default" style="padding: 10px 50px; font-size: 17px;"> Continue </button>
+                            
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <div class="col-sm-4 hidden-xs">
+                        <div class="booked">
+                            <h3 style="padding-bottom: 10px; ">Booking Summary</h3>
+
+                            <h3>{{book.airlineName}}</h3>
+                            <p>{{book.offerName}}</p>
+                            <p>{{book.roundTitle}}</p>
+                            <p>{{book.flight_className}}</p>
+                            <p style="display: flex; align-items: center; justify-content: center;">{{book.depart_fromName}}
+    
+                                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                                <svg fill="#000000" width="40px" height="30px" viewBox="0 0 24 24" id="right-arrow" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                <path id="primary" d="M3,12H21m-3,3,3-3L18,9" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                                </svg>
+                                {{book.destinationName}}
+                            </p>
+                            <p>{{book.departure}}</p>
+                            <p>{{book.arrival}}</p>
+                            <p>NGN {{book.price|intcomma}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+    {% else %}
+
+        <!-- hotel -->
+        <section>   
+            <div class="checkout container">          
+
+                <div class="row">
+                    <div class="col-xs-8">
+                        <form action="{% url 'hotel_checkout' %}" method="POST" class="booking-form">
+                            {% csrf_token %}
+                                
+                            <div class="panel" > 
+                                <div class="panel-body" style="color: #03427F; background-color: #d8e4ef; border-radius: 5px;"> 
+                                    <span class="glyphicon glyphicon-info-sign"></span> &ensp; 
+                                    Let every information be the same as provided on your passport
+                                </div>
+                            </div>
+
+                            <div class="col-sm-10 col-sm-offset-1">
+
+                                {% for message in messages %}
+                                    {% if message.tags != "success" %}
+
+                                    <div class="alert alert-danger alert-dismissible fade in" style="padding: 15px 30px 15px 20px;">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>{{message}}
+                                    </div>
+
+                                    {% else %}
+
+                                    <div class="alert alert-{{message.tags}} alert-dismissible fade in" style="padding: 15px 30px 15px 20px;">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>{{message}}
+                                    </div>
+
+                                    {% endif %} 
+                                {% endfor %}
+
+                            {% if hotel_checking %}
+                                <input type="text" name="hotel_booking_id" value="{{hotel_checking.hotel_booking_id}}" hidden>
+
+                                <h3>Personal Information</h3>
+                                <div class="form-group">
+                                    <label for="first_name">First Name:</label>
+                                    <input type="text" name="first_name" id="" class="form-control" placeholder="First name" value="{{hotel_checking.first_name}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="last_name">Last Name:</label>
+                                    <input type="text" name="last_name" id="" class="form-control" placeholder="Last name" value="{{hotel_checking.last_name}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="middle_name">Middle Name:</label>
+                                    <input type="text" name="middle_name" id="" class="form-control" placeholder="Middle name" value="{{hotel_checking.middle_name}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nationality">Nationality:</label>
+
+                                    <select name="nationality" id="" class="form-control" required>
+                                        <option value="{{hotel_checking.nationality_id}}">{{hotel_checking.nationality_id}}</option>   
+                                    
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="date_of_birth">Date of Birth:</label>
+                                    <input type="date" name="date_of_birth" id="dateOfBirthId" class="form-control" placeholder="Date Of Birth" value="{{hotel_checking.date_of_birth}}" onchange="validateDateOfBirth(event)" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Gender:</label>
+
+                                    <select name="gender" id="" class="form-control" required>
+                                        <option value="{{hotel_checking.gender_id}}">{{hotel_checking.gender_id}}</option>   
+
+                                    </select>
+                                </div>
+
+                                <h3 style="padding: 20px 0px 10px;">Where should we send your confirmation?</h3>
+                                <div class="form-group">
+                                    <label for="contact">Contact:</label>
+                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. 08017****78" maxlength="11" minlength="11" max="99999999999" min="0" value="{{hotel_checking.contact}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" name="email" id="" class="form-control" placeholder="Email" value="{{hotel_checking.mail}}" required>
+                                </div>
+
+                                <div class="seat_no" style="padding-top: 20px;">
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Number of Rooms</p>
+                                        <input type="number" name="" id="numberOfRoom" class="form-control" placeholder="Number of Rooms" min="0" value="{{hotel_book.no_of_roomsNumber}}" onchange="calculateAmount(event)">    
+                                    </div>
+
+                                    <div>
+                                        <p style="margin-bottom: -15px;">One Room Amount</p>
+                                        <input type="number" name="" id="oneRoomAmount" class="form-control" placeholder="One Room Amount" value="{{hotel_book.price}}" readonly>
+                                    </div>
+
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Total Amount</p>
+                                        <input type="number" name="total_amount" id="roomTotalAmount" class="form-control" placeholder="Total Amount" value="{{hotel_checking.total_amount}}" readonly>
+                                    </div>
+                                </div>
+
+                            {% else %}
+
+                            
+                                <input type="text" name="hotel_booking_id" value="{{hotel_book.id}}" hidden>
+
+                                <h3>Personal Information</h3>
+                                <div class="form-group">
+                                    <label for="first_name">First Name:</label>
+                                    <input type="text" name="first_name" id="" class="form-control" placeholder="First name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="last_name">Last Name:</label>
+                                    <input type="text" name="last_name" id="" class="form-control" placeholder="Last name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="middle_name">Middle Name:</label>
+                                    <input type="text" name="middle_name" id="" class="form-control" placeholder="Middle name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="nationality">Nationality:</label>
+
+                                    <select name="nationality" id="" class="form-control" required>
+                                        <option value="">Select Nationality</option>   
+                                        {% for nation in nations %}
+                                            <option value="{{nation.id}}">{{nation.name}}</option>   
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="date_of_birth">Date of Birth:</label>
+                                    <input type="date" name="date_of_birth" id="dateOfBirthId" class="form-control" placeholder="Date Of Birth" onchange="validateDateOfBirth(event)" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Gender:</label>
+
+                                    <select name="gender" id="" class="form-control" required>
+                                        <option value="">Select Gender</option>   
+                                        {% for gender in genders %}
+                                            <option value="{{gender.id}}">{{gender.type}}</option>   
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <h3 style="padding: 20px 0px 10px;">Where should we send your confirmation?</h3>
+                                <div class="form-group">
+                                    <label for="contact">Contact:</label>
+                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. 08017****78" maxlength="11" minlength="11" max="99999999999" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" name="email" id="" class="form-control" placeholder="Email" required>
+                                </div>
+                                
+                                <div class="seat_no" style="padding-top: 20px;">
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Number of Rooms</p>
+                                        <input type="number" name="" id="numberOfRoom" class="form-control" placeholder="Number of Rooms" min="0" value="{{hotel_book.no_of_roomsNumber}}" onchange="calculateAmount(event)">    
+                                    </div>
+
+                                    <div>
+                                        <p style="margin-bottom: -15px;">One Room Amount</p>
+                                        <input type="number" name="" id="oneRoomAmount" class="form-control" placeholder="One Room Amount" value="{{hotel_book.price}}" readonly>
+                                    </div>
+
+                                    <div>
+                                        <p style="margin-bottom: -15px;">Total Amount</p>
+                                        <input type="number" name="total_amount" id="roomTotalAmount" class="form-control" placeholder="Total Amount" value="{{hotel_book.price}}" readonly>
+                                    </div>
+                                </div>
+                            {% endif %}
+                
+                                <button type="submit" class="btn btn-default" style="padding: 10px 50px; font-size: 17px;"> Continue </button>
+                            
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <div class="col-sm-4 hidden-xs">
+                        <div class="booked">
+                            <h4 style="padding-bottom: 10px; font-weight: 600;">Booking Summary</h4>
+                            
+                            {% if not hotel_checking %}
+                                <img src="{{hotel_buuking.hotel.hotel_view.url}}" width="70%" height="140px" style="border-radius: 5px;">
+                            {% endif %}
+
+                            <h4>{{hotel_book.hotelName}}</h4>
+                            <p>{{hotel_book.cityName}}</p>
+                            <p>Condition: {{hotel_book.conditionName}}</p>
+                            <p>Check-in: {{hotel_book.check_in}}</p>
+                            <p>Number of Rooms: {{hotel_book.no_of_roomsNumber}}</p>
+                            <p>NGN {{hotel_book.price|intcomma}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    {% endif %}
+
+    
+
+
+    
+    
+
+    
+    <footer style="background-color: #f1f4f7;">
+        <div class="container">
+            <p class="col-sm-offset-4" style="padding-top: 60px; font-size: 16px; font-weight: 600;">Search for Flights, Hotels and Holidays packages</p>
+
+            <div class="row" style=" padding-bottom: 40px;">
+                <div class="col-sm-3" style=" text-align: center;">
+                    <img src="{% static 'images/favicon.png' %}" alt="flight-booking" width="160" height="90" />
+
+                    <p style="color: rgb(109, 132, 148); font-size: 15px; padding: 20px 0px 10px;">Let's stay connected</p>
+                    
+                    <ul class="list-inline" style="font-size: 23px;">
+                        <li><a href="https://www.facebook.com/profile.php?id=61550489822036" class="fa fa-facebook"></a></li>
+                        <li><a href="https://www.twitter.com/Oluwole_OBJ" class="fa fa-twitter"></a></li>
+                        <li><a href="https://www.instagram.com/lord_obj?igsh=dWt5dGw1dGU3MDZ5" class="fa fa-instagram"></a></li>
+                        <li><a href="https://www.linkedin.com/in/michael-oluwole" class="fa fa-linkedin"></a></li>
+                    </ul>
+                </div>
+
+                <div style="padding-top: 10px;">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <p style="font-size: 15px; font-weight: 600;">African Flights</p>
+                        <p><a href="">Flights to Lagos</a></p>
+                        <p><a href="">Flights to Accra</a></p>
+                        <p><a href="">Flights to Abijan</a></p>
+                        <p><a href="">Flights to Djibouti</a></p>
+
+                        <p style="font-size: 15px; font-weight: 600; padding-top: 35px;">African Hotels</p>
+                        <p><a href="">Hotels in Lagos</a></p>
+                        <p><a href="">Hotels in Accra</a></p>
+                        <p><a href="">Hotels in Abijan</a></p>
+                        <p><a href="">Hotels in Djibouti</a></p>
+                    </div>
+                    
+                    <div class="col-sm-2">
+                        <p style="font-size: 15px; font-weight: 600;">European Flights</p>
+                        <p><a href="">Flights to London</a></p>
+                        <p><a href="">Flights to Paris</a></p>
+                        <p><a href="">Flights to Berlin</a></p>
+                        <p><a href="">Flights to Madrid</a></p>
+
+                        <p style="font-size: 15px; font-weight: 600; padding-top: 35px;">European Hotels</p>
+                        <p><a href="">Hotels in London</a></p>
+                        <p><a href="">Hotels in Paris</a></p>
+                        <p><a href="">Hotels in Berlin</a></p>
+                        <p><a href="">Hotels in Madrid</a></p>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <p style="font-size: 15px; font-weight: 600;">Asian Flights</p>
+                        <p><a href="">Flights to Doha</a></p>
+                        <p><a href="">Flights to Dubai</a></p>
+                        <p><a href="">Flights to Beijing</a></p>
+                        <p><a href="">Flights to Hong Kong</a></p>
+
+                        <p style="font-size: 15px; font-weight: 600; padding-top: 35px;">Asian Hotels</p>
+                        <p><a href="">Hotels in Doha</a></p>
+                        <p><a href="">Hotels in Dubai</a></p>
+                        <p><a href="">Hotels in Beijing</a></p>
+                        <p><a href="">Hotels in Hong Kong</a></p>
+                    </div>
+
+                    <div class="col-sm-2"> 
+                        <p style="font-size: 15px; font-weight: 600;">American Flights</p>
+                        <p><a href="">Flights to New York</a></p>
+                        <p><a href="">Flights to Houston</a></p>
+                        <p><a href="">Flights to Atlanta</a></p>
+                        <p><a href="">Flights to Miami</a></p>
+
+                        <p style="font-size: 15px; font-weight: 600; padding-top: 35px;">American Hotels</p>
+                        <p><a href="">Hotels in New York</a></p>
+                        <p><a href="">Hotels in Houston</a></p>
+                        <p><a href="">Hotels in Atlanta</a></p>
+                        <p><a href="">Hotels in Miami</a></p>
+                    </div>
+                </div> 
+            </div>
+
+
+            <hr style="height: 2px; background-color: rgb(109, 132, 148);">
+
+            <div class="footer-down">
+                <div class="disabled">
+                    <a href="">Cookie policy</a> &ensp; &ensp; &ensp; 
+                    <a href="">Legal</a> &ensp; &ensp; &ensp;
+                    <a href="">Privacy policy</a> &ensp; &ensp; &ensp;
+                    <a href="">Accessibilty</a> &ensp; &ensp; &ensp;
+                    <a href="">Cookie consent</a>
+                </div>
+                <div>
+                    <p style="color: rgb(109, 132, 148);"> &copy; 2024 Airline-Booking. All rights reserved</p>
+                </div>
+            </div> 
+        </div>
+    </footer>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>   
+    <script>
+
+        // flight
+        function calculatePrice(event){
+            event.preventDefault()
+
+            let extraLuggageQuantity = document.querySelector("#extraLuggageQuantity").value;
+            let eachExtraLuggageAmount = document.querySelector("#eachExtraLuggageAmount").value;
+            let extraLuggageAmount = document.querySelector("#extraLuggageAmount").value;
+            let flightAmount = document.querySelector("#flightAmount").value;
+            let totalAmount = document.querySelector("#totalAmount").value;
+
+            extraLuggageQuantity = parseFloat(extraLuggageQuantity); 
+            eachExtraLuggageAmount = parseFloat(eachExtraLuggageAmount);         
+            extraLuggageAmount = parseFloat(extraLuggageAmount);          
+            flightAmount = parseFloat(flightAmount);          
+            totalAmount = parseFloat(totalAmount); 
+            
+            extraLuggageAmount = extraLuggageQuantity * eachExtraLuggageAmount;
+            totalAmount = extraLuggageAmount + flightAmount;
+
+            document.querySelector("#extraLuggageAmount").value = extraLuggageAmount
+            document.querySelector("#totalAmount").value = totalAmount
+        }  
+        
+        
+
+        // hotel
+        function calculateAmount(event){
+            event.preventDefault()
+
+            let numberOfRoom = document.querySelector("#numberOfRoom").value;
+            let oneRoomAmount = document.querySelector("#oneRoomAmount").value;
+            let roomTotalAmount = document.querySelector("#roomTotalAmount").value;
+        
+            numberOfRoom = parseFloat(numberOfRoom); 
+            oneRoomAmount = parseFloat(oneRoomAmount);         
+            roomTotalAmount = parseFloat(roomTotalAmount);          
+            
+            roomTotalAmount = numberOfRoom * oneRoomAmount;
+
+            document.querySelector("#roomTotalAmount").value = roomTotalAmount
+        }
+        
+
+
+        function validateDateOfBirth(event){
+            event.preventDefault()
+
+            let currentDate = new Date();
+            let dateOfBirthId = document.getElementById("dateOfBirthId").value;
+            let dateOfBirthDate = new Date(dateOfBirthId);
+
+            if (dateOfBirthDate > currentDate){
+                document.getElementById("dateOfBirthId").value = ""
+                return alert("This is an invalid date of birth!")
+            }
+        }
+
+
+
+        function validatePassportExpiryDate(event){
+            event.preventDefault()
+
+            let currentDate = new Date();
+            let expiryId = document.getElementById("expiryId").value;
+            let expiryDate = new Date(expiryId);
+
+            if (expiryDate < currentDate){
+                document.getElementById("expiryId").value = ""
+                return alert("This card has expired and is not valid for airline booking!")
+            }
+        }
+    </script>
+</body>
+</html>

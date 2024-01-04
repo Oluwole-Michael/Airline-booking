@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="icon" href="{% static 'images/favicon.png' %}">
+
+    <title>Error</title>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="col-xs-" style="text-align: center; margin-top: 100px;">
+            <h1 style="font-size: 70px; font-weight: bolder;">Oops!</h1> <br>
+            <p style="text-transform: capitalize; font-weight: bold;">404 - page not found</p> <br>
+            <p>The page you are looking for might have been removed, <br> had its name changed or is temporarily unavailable.</p>
+
+            <br><br><br>
+            <a href="{% url 'home' %}" class="btn btn-lg btn-default">Go to home</a>
+        </div>  
+    </div>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>   
+</body>
+</html>
