@@ -76,7 +76,7 @@ class Booking(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.airline.name} > {self.depart_from} - {self.destination}: {self.departure}"
+        return f"{self.airline.name} > {self.depart_from} - {self.destination}: {self.departure} - {self.flight_class.name}: {self.round.title}"
     
 
 
