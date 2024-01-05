@@ -124,7 +124,7 @@ class HotelBooking(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.city} > {self.hotel.name} - {self.condition} > {self.price}"
+        return f"{self.city} > {self.hotel.name} : {self.no_of_rooms.number} - {self.condition.name} > {self.price}"
         
 
 
