@@ -96,18 +96,16 @@ def HotelBookingFilter(request):
     try:
         city = request.POST["city"]
         room = request.POST["room"]
-        check_in = request.POST["check_in"]
         
         hotel_booking_info = {
             "city_id": city, 
             "no_of_rooms_id": room, 
-            "check_in": check_in, 
         }
 
         hotel_booking = HotelBooking.objects.filter(
             city_id=int(city), 
             no_of_rooms_id=int(room), 
-            check_in=check_in, 
+            # check_in=check_in, 
             )
         
         request.session["hotel_booking_info"] = hotel_booking_info
@@ -216,11 +214,10 @@ def HotelBook(request, id):
         request.session["hotel_book"] = {
             "id": str(hotel_booking.id),
             "hotelName": hotel_booking.hotel.name,
-            "hotelHotel_view": str(hotel_booking.hotel.hotel_view),
+            "hotelHotel_viewText": str(hotel_booking.hotel.hotel_viewText),
             "cityName": hotel_booking.city.name,
             "conditionName": hotel_booking.condition.name,
             "no_of_roomsNumber": str(hotel_booking.no_of_rooms.number),
-            "check_in": str(hotel_booking.check_in),
             "price": str( hotel_booking.price)
         }
         hotel_book = request.session["hotel_book"]
@@ -337,6 +334,8 @@ def HotelBookingCheckout(request):
     try:
         if request.method=="POST":
             hotel_booking_id = request.POST['hotel_booking_id']
+            check_in = request.POST['check_in'] 
+            check_out = request.POST['check_out'] 
             first_name = request.POST['first_name'] 
             last_name = request.POST['last_name']
             middle_name = request.POST['middle_name']
@@ -349,6 +348,8 @@ def HotelBookingCheckout(request):
 
             hotel_checkout_info = {
                 "hotel_booking_id": hotel_booking_id,
+                "check_in": check_in,
+                "check_out": check_out,
                 "first_name": first_name,
                 "last_name": last_name,
                 "middle_name": middle_name,
@@ -375,6 +376,8 @@ def HotelBookingCheckout(request):
                     hotel_checkout = HotelCheckout(
                         user = user,
                         hotel_booking = hotel_booking,
+                        check_in=check_in,
+                        check_out=check_out,
                         first_name=first_name, 
                         last_name=last_name,
                         middle_name=middle_name,

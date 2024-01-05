@@ -455,6 +455,32 @@
                             {% if hotel_checking %}
                                 <input type="text" name="hotel_booking_id" value="{{hotel_checking.hotel_booking_id}}" hidden>
 
+                                <br>
+                                <br>
+                                
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="check_in">Check In:</label>
+                                            <input type="date" placeholder="Check-in" name="check_in" id="checkIn" class="form-control input-lg" value="{{hotel_checking.check_out}}" onchange="validateCheckIn(event)" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="check_out">Check Out:</label>
+                                            <input type="date" placeholder="Check-out" name="check_out" id="checkOut" class="form-control input-lg" value="{{hotel_checking.check_out}}" onchange="validateCheckOut(event)" required>
+                                        </div>                                
+                                    </div>
+                                </div>
+                               
+                                <div class="well-lg" style="visibility: hidden;">
+                                    <br>
+                                    <br>
+                                    <br>
+                                </div>
+                            
+
                                 <h3>Personal Information</h3>
                                 <div class="form-group">
                                     <label for="first_name">First Name:</label>
@@ -521,6 +547,35 @@
                             
                                 <input type="text" name="hotel_booking_id" value="{{hotel_book.id}}" hidden>
 
+                                <br>
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="check_in">Check In:</label>
+                                            <input type="date" placeholder="Check-in" name="check_in" id="checkIn" class="form-control input-lg" onchange="validateCheckIn(event)" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="check_out">Check Out:</label>
+                                            <input type="date" placeholder="Check-out" name="check_out" id="checkOut" class="form-control input-lg" onchange="validateCheckOut(event)" required>
+                                        </div>                                
+                                    </div>
+                                </div>
+
+                                <br>
+
+                             
+                                <!-- {% if hotel_bo0k.condition != "Non-Refundable" %}
+
+                                <div><b style="color: rgb(42, 33, 33);">NB: Refund is available for hotel booking cancelled within three days after booking only.</b></div>
+
+                                {% endif %} -->
+
+                            
                                 <h3>Personal Information</h3>
                                 <div class="form-group">
                                     <label for="first_name">First Name:</label>
@@ -602,14 +657,14 @@
                         <div class="booked">
                             <h4 style="padding-bottom: 10px; font-weight: 600;">Booking Summary</h4>
                             
-                            {% if not hotel_checking %}
+                            <!-- {% if not hotel_checking %}
                                 <img src="{{hotel_buuking.hotel.hotel_view.url}}" width="70%" height="140px" style="border-radius: 5px;">
-                            {% endif %}
-
+                            {% endif %} -->
+                            
+                            <img src="data:image/jpg;base64,{{hotel_book.hotelHotel_viewText}}" width="70%" height="140px" style="border-radius: 5px;" alt="">
                             <h4>{{hotel_book.hotelName}}</h4>
                             <p>{{hotel_book.cityName}}</p>
                             <p>Condition: {{hotel_book.conditionName}}</p>
-                            <p>Check-in: {{hotel_book.check_in}}</p>
                             <p>Number of Rooms: {{hotel_book.no_of_roomsNumber}}</p>
                             <p>NGN {{hotel_book.price|intcomma}}</p>
                         </div>
@@ -769,6 +824,39 @@
             roomTotalAmount = numberOfRoom * oneRoomAmount;
 
             document.querySelector("#roomTotalAmount").value = roomTotalAmount
+        }
+
+
+
+        // hotel
+        function validateCheckIn(event){
+            event.preventDefault()
+
+            let currentDate = new Date();
+            let checkIn = document.getElementById("checkIn").value;
+            let checkInDate = new Date(checkIn);
+
+            if (checkInDate < currentDate){
+                document.getElementById("checkIn").value = ""
+                return alert("This is an invalid date for check in!")
+            }
+        }
+
+
+
+        // hotel
+        function validateCheckOut(event){
+            event.preventDefault()
+
+            let checkIn = document.getElementById("checkIn").value;
+            let checkOut = document.getElementById("checkOut").value;
+            let checkInDate = new Date(checkIn);
+            let checkOutDate = new Date(checkOut);
+
+            if (checkOutDate < checkInDate){
+                document.getElementById("checkOut").value = ""
+                return alert("This is an invalid date for check out!")
+            }
         }
         
 

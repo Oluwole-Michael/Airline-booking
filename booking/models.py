@@ -112,14 +112,6 @@ class Rooms(models.Model):
         return f"{self.number}"
     
 
-class CheckInOut(models.Model):
-    check_in = models.DateField()   
-    check_out = models.DateField() 
-
-    def __str__(self):
-        return f"{self.check_in} > {self.check_out}"
-    
-
 class HotelBooking(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -127,13 +119,12 @@ class HotelBooking(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, default=None, related_name="hotel_booking_city")
     condition = models.ForeignKey(Conditions, on_delete=models.CASCADE, default=None, related_name="hotel_booking_condition")
     no_of_rooms = models.ForeignKey(Rooms, on_delete=models.CASCADE, default=None, related_name="hotel_booking_room")
-    check_in_out = models.ForeignKey(CheckInOut, on_delete=models.CASCADE, default=None, related_name="hotel_booking_check")
-
+    
     price = models.DecimalField(decimal_places=2, max_digits=20, default=0)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.city} > {self.hotel.name} - {self.check_in_out.check_in} > {self.check_in_out.check_out}"
+        return f"{self.city} > {self.hotel.name} - {self.condition} > {self.price}"
         
 
 
@@ -192,6 +183,9 @@ class Checkout(models.Model):
 class HotelCheckout(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     hotel_booking = models.ForeignKey(HotelBooking, on_delete=models.CASCADE, default=None)
+
+    check_in = models.DateField(default=None, null=True, blank=True)
+    check_out = models.DateField(default=None, null=True, blank=True)
     
     # primary info
     first_name = models.CharField(max_length=250, default=None)

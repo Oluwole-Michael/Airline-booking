@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'bookingproject.wsgi.application'
 # } 
 
 DATABASES = {
-    'default': dj_database_url.parse('postgres://airlinebooking_k454_user:i6tSKZ5mgr8k4JshbCl1u3aIbfHQYSlZ@dpg-cmbn7b6d3nmc73ekia9g-a.oregon-postgres.render.com/airlinebooking_k454')
+    'default': dj_database_url.parse('postgres://airlinebooking_rxq2_user:VaX1yxYnFuDewl5gumZZXaWIgY48wMbx@dpg-cmc09rud3nmc73enrog0-a.oregon-postgres.render.com/airlinebooking_rxq2')
 }
 
 
