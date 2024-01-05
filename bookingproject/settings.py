@@ -87,10 +87,19 @@ WSGI_APPLICATION = 'bookingproject.wsgi.application'
 #     }
 # }
 
- 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'Airline',
+#         'USER': os.getenv("USER"),
+#         'PASSWORD': os.getenv("PASSWORD"),
+#         'HOST': 'localhost',
+#         'PORT': os.getenv("PORT"),
+#     }
+# } 
 
 DATABASES = {
-    'default': dj_database_url.parse('postgres://airlinebooking_k1iz_user:2Db5OyQXQYRca6XnAllBJQvo0jCqYH3p@dpg-cmb7m5ed3nmc73ensqm0-a.oregon-postgres.render.com/airlinebooking_k1iz')
+    'default': dj_database_url.parse('postgres://airlinebooking_k454_user:i6tSKZ5mgr8k4JshbCl1u3aIbfHQYSlZ@dpg-cmbn7b6d3nmc73ekia9g-a.oregon-postgres.render.com/airlinebooking_k454')
 }
 
 

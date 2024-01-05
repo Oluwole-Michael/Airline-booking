@@ -17,9 +17,10 @@ class Flight_Letter(models.Model):
 
 class Airline(models.Model):
     name = models.CharField(max_length=200)
-    airline_logo = models.ImageField(upload_to='flight', default=0, null=True, blank=True)
+    airline_logoText = models.TextField()
     model = models.CharField(max_length=200, null=True)
     seat_numbers = models.PositiveIntegerField(default=0, null=True)
+    # airline_logo = models.ImageField(upload_to='flight', default=0, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}: {self.seat_numbers}"
@@ -83,7 +84,8 @@ class Booking(models.Model):
 
 class Hotel(models.Model):
     name = models.CharField()
-    hotel_view = models.ImageField(upload_to='hotel')
+    hotel_viewText = models.TextField()
+    # hotel_view = models.ImageField(upload_to='hotel')
 
     def __str__(self):
         return f"{self.name}"
@@ -110,6 +112,14 @@ class Rooms(models.Model):
         return f"{self.number}"
     
 
+class CheckInOut(models.Model):
+    check_in = models.DateField()   
+    check_out = models.DateField() 
+
+    def __str__(self):
+        return f"{self.check_in} > {self.check_out}"
+    
+
 class HotelBooking(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -117,13 +127,13 @@ class HotelBooking(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, default=None, related_name="hotel_booking_city")
     condition = models.ForeignKey(Conditions, on_delete=models.CASCADE, default=None, related_name="hotel_booking_condition")
     no_of_rooms = models.ForeignKey(Rooms, on_delete=models.CASCADE, default=None, related_name="hotel_booking_room")
+    check_in_out = models.ForeignKey(CheckInOut, on_delete=models.CASCADE, default=None, related_name="hotel_booking_check")
 
-    check_in = models.DateField()
     price = models.DecimalField(decimal_places=2, max_digits=20, default=0)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.city} > {self.hotel.name} - {self.check_in}"
+        return f"{self.city} > {self.hotel.name} - {self.check_in_out.check_in} > {self.check_in_out.check_out}"
         
 
 
