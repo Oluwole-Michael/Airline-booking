@@ -16,6 +16,7 @@ admin.site.register(Hotel)
 admin.site.register(City)
 admin.site.register(Conditions)
 admin.site.register(Rooms)
+admin.site.register(CheckInOut)
 admin.site.register(HotelBooking)
 
 admin.site.register(Nations)
