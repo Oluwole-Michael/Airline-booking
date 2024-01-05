@@ -71,7 +71,7 @@ class Booking(models.Model):
     arrival_2 = models.DateTimeField(default=None, null=True, blank=True)
     passenger = models.CharField(default=1)
   
-    stops = models.PositiveIntegerField(default=1)
+    stops = models.PositiveIntegerField(default=0)
     each_extra_luggage_price = models.DecimalField(decimal_places=2, max_digits=20, default=0)
     price = models.DecimalField(decimal_places=2, max_digits=20, default=0)
     date = models.DateTimeField(auto_now_add=True)
