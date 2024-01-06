@@ -345,6 +345,7 @@ def HotelBookingCheckout(request):
             contact = request.POST['contact']
             mail = request.POST.get('email', False)
             total_amount = request.POST['total_amount']
+            no_of_rooms = request.POST['no_of_rooms']
 
             hotel_checkout_info = {
                 "hotel_booking_id": hotel_booking_id,
@@ -358,7 +359,8 @@ def HotelBookingCheckout(request):
                 "gender_id": gender,
                 "contact": contact,
                 "mail": mail,
-                "total_amount": total_amount
+                "total_amount": total_amount,
+                "no_of_rooms": no_of_rooms
             }
 
             request.session["hotel_checkout_info"] = hotel_checkout_info
