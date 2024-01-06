@@ -242,6 +242,14 @@
                                     <div>
                                         <p style="margin-bottom: 10px;"> <b>NB: </b> Each extra luggage is NGN {{book.each_extra_luggage_price|intcomma}}</p>
 
+                                        {% if book.roundTitle != "One Way" %}
+                                            <dl style="margin-bottom: 13px;"> 
+                                                <dt>NB: </dt> 
+                                                <dd>Each extra luggage amount is NGN {{book.each_extra_luggage_price|intcomma}}</dd>
+                                                <dd>Extra luggage amount is for first trip only.</dd>
+                                            </dl>
+                                        {% endif %}
+
                                         <p style="margin-bottom: -15px;">Number of Luggage</p>
                                         <input type="number" name="extra_luggage_quantity" id="extraLuggageQuantity" class="form-control" placeholder="Number of Luggage" min="0" value="{{checking.extra_luggage_quantity}}" onchange="calculatePrice(event)">    
                                     </div>
@@ -354,14 +362,15 @@
                                     <input type="number" name="seat_no" id="" class="form-control" placeholder="Specific seat number is not available" value="" readonly>
 
                                     <div>
-                                        <dl style="margin-bottom: 10px;"> 
-                                            <dt>NB: </dt> 
-                                            <dd>Each extra luggage amount is NGN {{book.each_extra_luggage_price|intcomma}}</dd>
-
-                                            {% if book.roundTitle != "One Way" %}
-                                            <dd>Extra luggage amount is for first trip only.</dd>
-                                            {% endif %}
-                                        </dl>
+                                        <p style="margin-bottom: 10px;"> <b>NB: </b> Each extra luggage is NGN {{book.each_extra_luggage_price|intcomma}}</p>
+                                        
+                                        {% if book.roundTitle != "One Way" %}
+                                            <dl style="margin-bottom: 13px;"> 
+                                                <dt>NB: </dt> 
+                                                <dd>Each extra luggage amount is NGN {{book.each_extra_luggage_price|intcomma}}</dd>
+                                                <dd>Extra luggage amount is for first trip only.</dd>
+                                            </dl>
+                                        {% endif %}
                                         
                                         <p style="margin-bottom: -15px;">Number of Luggage</p>
                                         <input type="number" name="extra_luggage_quantity" id="extraLuggageQuantity" class="form-control" placeholder="Number of Luggage" min="0" value="0" onchange="calculatePrice(event)">    
