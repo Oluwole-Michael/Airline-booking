@@ -354,8 +354,15 @@
                                     <input type="number" name="seat_no" id="" class="form-control" placeholder="Specific seat number is not available" value="" readonly>
 
                                     <div>
-                                        <p style="margin-bottom: 10px;"> <b>NB: </b> Each extra luggage is NGN {{book.each_extra_luggage_price|intcomma}}</p>
+                                        <dl style="margin-bottom: 10px;"> 
+                                            <dt>NB: </dt> 
+                                            <dd>Each extra luggage amount is NGN {{book.each_extra_luggage_price|intcomma}}</dd>
 
+                                            {% if book.roundTitle != "One Way" %}
+                                            <dd>Extra luggage amount is for first trip only.</dd>
+                                            {% endif %}
+                                        </dl>
+                                        
                                         <p style="margin-bottom: -15px;">Number of Luggage</p>
                                         <input type="number" name="extra_luggage_quantity" id="extraLuggageQuantity" class="form-control" placeholder="Number of Luggage" min="0" value="0" onchange="calculatePrice(event)">    
                                     </div>
@@ -523,12 +530,7 @@
                                 <div class="seat_no" style="padding-top: 20px;">
                                     <div>
                                         <p style="margin-bottom: -15px;">Number of Rooms</p>
-                                        <input type="number" name="no_of_rooms" id="numberOfRoom" class="form-control" placeholder="Number of Rooms" min="0" value="{{hotel_checking.no_of_rooms}}" onchange="calculateAmount(event)" readonly>    
-                                    </div>
-
-                                    <div>
-                                        <p style="margin-bottom: -15px;">One Room Amount</p>
-                                        <input type="number" name="" id="oneRoomAmount" class="form-control" placeholder="One Room Amount" value="{{hotel_book.price}}" readonly>
+                                        <input type="number" name="no_of_rooms" id="numberOfRoom" class="form-control" placeholder="Number of Rooms" min="0" value="{{hotel_checking.no_of_rooms}}" readonly>    
                                     </div>
 
                                     <div>
@@ -626,13 +628,13 @@
                                 <div class="seat_no" style="padding-top: 20px;">
                                     <div>
                                         <p style="margin-bottom: -15px;">Number of Rooms</p>
-                                        <input type="number" name="no_of_rooms" id="numberOfRoom" class="form-control" placeholder="Number of Rooms" min="0" value="{{hotel_book.no_of_roomsNumber}}" onchange="calculateAmount(event)" readonly>    
+                                        <input type="number" name="no_of_rooms" id="numberOfRoom" class="form-control" placeholder="Number of Rooms" min="0" value="{{hotel_book.no_of_roomsNumber}}" readonly>    
                                     </div>
 
-                                    <div>
-                                        <p style="margin-bottom: -15px;">One Room Amount</p>
+                                    <!-- <div>
+                                        <p style="margin-bottom: -15px;">One Room Amount Per Night</p>
                                         <input type="number" name="" id="oneRoomAmount" class="form-control" placeholder="One Room Amount" value="{{hotel_book.price}}" readonly>
-                                    </div>
+                                    </div> -->
 
                                     <div>
                                         <p style="margin-bottom: -15px;">Total Amount</p>
@@ -805,21 +807,21 @@
         
 
         // hotel
-        function calculateAmount(event){
-            event.preventDefault()
+        // function calculateAmount(event){
+            // event.preventDefault()
 
-            let numberOfRoom = document.querySelector("#numberOfRoom").value;
-            let oneRoomAmount = document.querySelector("#oneRoomAmount").value;
-            let roomTotalAmount = document.querySelector("#roomTotalAmount").value;
+            // let numberOfRoom = document.querySelector("#numberOfRoom").value;
+            // let oneRoomAmount = document.querySelector("#oneRoomAmount").value;
+            // let roomTotalAmount = document.querySelector("#roomTotalAmount").value;
         
-            numberOfRoom = parseFloat(numberOfRoom); 
-            oneRoomAmount = parseFloat(oneRoomAmount);         
-            roomTotalAmount = parseFloat(roomTotalAmount);          
+            // numberOfRoom = parseFloat(numberOfRoom); 
+            // oneRoomAmount = parseFloat(oneRoomAmount);         
+            // roomTotalAmount = parseFloat(roomTotalAmount);          
             
-            roomTotalAmount = numberOfRoom * oneRoomAmount;
+            // roomTotalAmount = numberOfRoom * oneRoomAmount;
 
-            document.querySelector("#roomTotalAmount").value = roomTotalAmount
-        }
+            // document.querySelector("#roomTotalAmount").value = roomTotalAmount
+        // }
 
 
 
