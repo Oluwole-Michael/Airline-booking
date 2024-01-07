@@ -240,8 +240,10 @@
                                     <input type="number" name="seat_no" id="" class="form-control" placeholder="Specific seat number is not available" value="" readonly>                                
 
                                     <div>
-                                        <p style="margin-bottom: 10px;"> <b>NB: </b> Each extra luggage is NGN {{book.each_extra_luggage_price|intcomma}}</p>
-
+                                        {% if book.roundTitle != "Round Trip" %}
+                                            <p style="margin-bottom: 10px;"> <b>NB: </b> Each extra luggage is NGN {{book.each_extra_luggage_price|intcomma}}</p>
+                                        {% endif %}
+                                        
                                         {% if book.roundTitle != "One Way" %}
                                             <dl style="margin-bottom: 13px;"> 
                                                 <dt>NB: </dt> 
@@ -362,8 +364,10 @@
                                     <input type="number" name="seat_no" id="" class="form-control" placeholder="Specific seat number is not available" value="" readonly>
 
                                     <div>
-                                        <p style="margin-bottom: 10px;"> <b>NB: </b> Each extra luggage is NGN {{book.each_extra_luggage_price|intcomma}}</p>
-                                        
+                                        {% if book.roundTitle != "Round Trip" %}
+                                            <p style="margin-bottom: 10px;"> <b>NB: </b> Each extra luggage is NGN {{book.each_extra_luggage_price|intcomma}}</p>
+                                        {% endif %}
+
                                         {% if book.roundTitle != "One Way" %}
                                             <dl style="margin-bottom: 13px;"> 
                                                 <dt>NB: </dt> 

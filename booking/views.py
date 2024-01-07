@@ -162,7 +162,7 @@ def SortBookingFilter(request, sort_booking):
                 flight_class_id=int(flight), 
                 depart_from_id=int(depart_from), 
                 destination_id=int(destination)
-            ).order_by('airline')
+            ).order_by('-airline')
             return render(request, "booking.html", {"bookings": results})
         
     except Exception as ex:
