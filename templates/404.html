@@ -10,6 +10,23 @@
     <link rel="icon" href="{% static 'images/favicon.png' %}">
 
     <title>Error</title>
+    <style>
+        p{
+            color: rgb(123, 123, 123); 
+            line-height: 25px; 
+            font-size: 16px;
+        }
+
+        a{
+            color: #000;
+            background-color: rgb(204, 202, 202); 
+        }
+
+        a:hover{
+            color: #fff !important;
+            background-color: #252222;
+        }
+    </style>
 </head>
 <body>
     
@@ -19,8 +36,8 @@
             <p style="text-transform: capitalize; font-weight: bold;">404 - page not found</p> <br>
             <p>The page you are looking for might have been removed, <br> had its name changed or is temporarily unavailable.</p>
 
-            <br><br><br>
-            <a href="{% url 'home' %}" class="btn btn-lg btn-default">Go to home</a>
+            <br><br>
+            <a href="{% url 'home' %}" class="btn btn-lg btn-secondary">Go to home</a>
         </div>  
     </div>
 
