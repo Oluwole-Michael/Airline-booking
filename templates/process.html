@@ -1,5 +1,6 @@
 {% load static %}
 {% load widget_tweaks %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +17,7 @@
 <body>
 
     <div class="container mt-3">
-        <h1>Payment {{ payment.id }}</h1>
+        <h1>Payment</h1>
         <ul class="object-tools">
             <li>
                 <a href="#" onclick="window.print();">
@@ -26,7 +27,7 @@
         </ul>
         <table class="table">
             <tr>
-                <th>Created</th>
+                <th>Time</th>
                 <td>{{ payment.created }}</td>
             </tr>
             <tr>
@@ -40,7 +41,7 @@
             
             <tr>
                 <th>Total amount</th>
-                <td>NGN {{ payment.get_amount }}</td>
+                <td>NGN {{ payment.get_amount|intcomma }}</td>
             </tr>
             <tr>
                 <th>Status</th>

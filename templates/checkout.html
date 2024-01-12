@@ -187,8 +187,11 @@
                                     <label for="nationality">Nationality:</label>
 
                                     <select name="nationality" id="" class="form-control" required>
-                                        <option value="{{checking.nationality_id}}">{{checking.nationality_id}}</option>   
-                                    
+                                        <option value="{{checking.nationality.id}}-{{checking.nationality.name}}">{{checking.nationality.name}}</option>
+
+                                        {% for nation in nations %}
+                                            <option value="{{nation.id}}-{{nation.name}}">{{nation.name}}</option>   
+                                        {% endfor %}
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -199,8 +202,11 @@
                                     <label for="gender">Gender:</label>
 
                                     <select name="gender" id="" class="form-control" required>
-                                        <option value="{{checking.gender_id}}">{{checking.gender_id}}</option>   
+                                        <option value="{{checking.gender.id}}-{{checking.gender.type}}">{{checking.gender.type}}</option> 
 
+                                        {% for gender in genders %}
+                                            <option value="{{gender.id}}-{{gender.type}}">{{gender.type}}</option>   
+                                        {% endfor %}                                        
                                     </select>
                                 </div>
 
@@ -217,15 +223,18 @@
                                     <label for="passport_issuing_authority">Passport Issuing Authority:</label>
 
                                     <select name="passport_issuing_authority" id="" class="form-control" required>
-                                        <option value="{{checking.passport_issuing_authority_id}}">{{checking.passport_issuing_authority_id}}</option>   
+                                        <option value="{{checking.passport_issuing_authority.id}}-{{checking.passport_issuing_authority.name}}">{{checking.passport_issuing_authority.name}}</option>   
                                         
+                                        {% for nation in nations %}
+                                            <option value="{{nation.id}}-{{nation.name}}">{{nation.name}}</option>   
+                                        {% endfor %}
                                     </select>
                                 </div>
 
                                 <h3 style="padding: 20px 0px 10px;">Where should we send your confirmation?</h3>
                                 <div class="form-group">
                                     <label for="contact">Contact:</label>
-                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. 08017****78" maxlength="11" minlength="11" max="99999999999" min="0" value="{{checking.contact}}" required>
+                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. +2348017897678" maxlength="15" minlength="11" value="{{checking.contact}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email:</label>
@@ -304,7 +313,7 @@
                                     <select name="nationality" id="" class="form-control" required>
                                         <option value="">Select Nationality</option>   
                                         {% for nation in nations %}
-                                            <option value="{{nation.id}}">{{nation.name}}</option>   
+                                            <option value="{{nation.id}}-{{nation.name}}">{{nation.name}}</option>   
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -319,7 +328,7 @@
                                     <select name="gender" id="" class="form-control" required>
                                         <option value="">Select Gender</option>   
                                         {% for gender in genders %}
-                                            <option value="{{gender.id}}">{{gender.type}}</option>   
+                                            <option value="{{gender.id}}-{{gender.type}}">{{gender.type}}</option>   
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -341,7 +350,7 @@
                                     <select name="passport_issuing_authority" id="" class="form-control" required>
                                         <option value="">Select Passport Issuing Authority</option>   
                                         {% for nation in nations %}
-                                            <option value="{{nation.id}}">{{nation.name}}</option>   
+                                            <option value="{{nation.id}}-{{nation.name}}">{{nation.name}}</option>   
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -349,7 +358,7 @@
                                 <h3 style="padding: 20px 0px 10px;">Where should we send your confirmation?</h3>
                                 <div class="form-group">
                                     <label for="contact">Contact:</label>
-                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. 08017****78" maxlength="11" minlength="11" max="99999999999" min="0" required>
+                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. +2348017897678" maxlength="15" minlength="11" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email:</label>
@@ -513,8 +522,11 @@
                                     <label for="nationality">Nationality:</label>
 
                                     <select name="nationality" id="" class="form-control" required>
-                                        <option value="{{hotel_checking.nationality_id}}">{{hotel_checking.nationality_id}}</option>   
-                                    
+                                        <option value="{{hotel_checking.nationality.id}}-{{hotel_checking.nationality.name}}">{{hotel_checking.nationality.name}}</option> 
+
+                                        {% for nation in nations %}
+                                            <option value="{{nation.id}}-{{nation.name}}">{{nation.name}}</option>   
+                                        {% endfor %}
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -525,15 +537,18 @@
                                     <label for="gender">Gender:</label>
 
                                     <select name="gender" id="" class="form-control" required>
-                                        <option value="{{hotel_checking.gender_id}}">{{hotel_checking.gender_id}}</option>   
+                                        <option value="{{hotel_checking.gender.id}}-{{hotel_checking.gender.name}}">{{hotel_checking.gender.name}}</option> 
 
+                                        {% for gender in genders %}
+                                            <option value="{{gender.id}}-{{gender.type}}">{{gender.type}}</option>   
+                                        {% endfor %}   
                                     </select>
                                 </div>
 
                                 <h3 style="padding: 20px 0px 10px;">Where should we send your confirmation?</h3>
                                 <div class="form-group">
                                     <label for="contact">Contact:</label>
-                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. 08017****78" maxlength="11" minlength="11" max="99999999999" min="0" value="{{hotel_checking.contact}}" required>
+                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. +2348017897678" maxlength="15" minlength="11" value="{{hotel_checking.contact}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email:</label>
@@ -581,7 +596,7 @@
                                 <br>
 
                              
-                                <!-- {% if hotel_bo0k.condition != "Non-Refundable" %}
+                                <!-- {% if hotel_book.condition != "Non-Refundable" %}
 
                                 <div><b style="color: rgb(42, 33, 33);">NB: Refund is available for hotel booking cancelled within three days after booking only.</b></div>
 
@@ -610,7 +625,7 @@
                                     <select name="nationality" id="" class="form-control" required>
                                         <option value="">Select Nationality</option>   
                                         {% for nation in nations %}
-                                            <option value="{{nation.id}}">{{nation.name}}</option>   
+                                            <option value="{{nation.id}}-{{nation.name}}">{{nation.name}}</option>   
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -625,7 +640,7 @@
                                     <select name="gender" id="" class="form-control" required>
                                         <option value="">Select Gender</option>   
                                         {% for gender in genders %}
-                                            <option value="{{gender.id}}">{{gender.type}}</option>   
+                                            <option value="{{gender.id}}-{{gender.type}}">{{gender.type}}</option>   
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -633,7 +648,7 @@
                                 <h3 style="padding: 20px 0px 10px;">Where should we send your confirmation?</h3>
                                 <div class="form-group">
                                     <label for="contact">Contact:</label>
-                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. 08017****78" maxlength="11" minlength="11" max="99999999999" min="0" required>
+                                    <input type="tel" name="contact" id="" class="form-control" placeholder="E.g. +2348017897678" maxlength="15" minlength="11" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email:</label>
@@ -878,13 +893,13 @@
         function validateDateOfBirth(event){
             event.preventDefault()
 
-            let currentDate = new Date();
+            let currentYear = new Date().getFullYear();
             let dateOfBirthId = document.getElementById("dateOfBirthId").value;
-            let dateOfBirthDate = new Date(dateOfBirthId);
+            let dateOfBirthYear = new Date(dateOfBirthId).getFullYear();
 
-            if (dateOfBirthDate > currentDate){
+            if ((currentYear - dateOfBirthYear) < 12){
                 document.getElementById("dateOfBirthId").value = ""
-                return alert("This is an invalid date of birth!")
+                return alert("You are younger than the minimum age (12 years) for booking!")
             }
         }
 

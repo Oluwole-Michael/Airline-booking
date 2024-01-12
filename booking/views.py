@@ -244,13 +244,26 @@ def BookingCheckout(request):
             first_name = request.POST['first_name'] 
             last_name = request.POST['last_name']
             middle_name = request.POST['middle_name']
+
             nationality = request.POST['nationality']
+            splitted_nationality = nationality.split("-")
+            nationality_id = splitted_nationality[0]
+            nationality_name = splitted_nationality[1]
+
             date_of_birth = request.POST['date_of_birth']
+
             gender = request.POST['gender']
+            splitted_gender = gender.split("-")
+            gender_id = splitted_gender[0]
+            gender_type = splitted_gender[1]
 
             passport_no = request.POST['passport_no']
             passport_expiry_date = request.POST['passport_expiry_date']
+
             passport_issuing_authority = request.POST['passport_issuing_authority']
+            splitted_passport_issuing_authority = passport_issuing_authority.split("-")
+            passport_issuing_authority_id = splitted_passport_issuing_authority[0]
+            passport_issuing_authority_name = splitted_passport_issuing_authority[1]
 
             contact = request.POST['contact']
             mail = request.POST.get('email', False)
@@ -266,12 +279,21 @@ def BookingCheckout(request):
                 "first_name": first_name,
                 "last_name": last_name,
                 "middle_name": middle_name,
-                "nationality_id": nationality,
+                "nationality": {
+                    "id": nationality_id,
+                    "name": nationality_name
+                },
                 "date_of_birth": date_of_birth,
-                "gender_id": gender,
+                "gender": {
+                    "id": gender_id,
+                    "type": gender_type
+                },
                 "passport_no": passport_no,
                 "passport_expiry_date": passport_expiry_date,
-                "passport_issuing_authority_id": passport_issuing_authority,
+                "passport_issuing_authority": {
+                    "id": passport_issuing_authority_id,
+                    "name": passport_issuing_authority_name
+                },
                 "contact": contact,
                 "mail": mail,
                 "address": address,
@@ -286,7 +308,7 @@ def BookingCheckout(request):
             checkout_info = request.session["checkout_info"]
             book = request.session["book"]
 
-            if len(contact) == 11:    
+            if len(contact) >= 11:    
 
                 if request.user.is_authenticated:
                     user_id = request.session["userId"]  
@@ -299,12 +321,12 @@ def BookingCheckout(request):
                         first_name=first_name, 
                         last_name=last_name,
                         middle_name=middle_name,
-                        nationality_id=int(nationality),
+                        nationality_id=int(nationality_id),
                         date_of_birth=date_of_birth,
-                        gender_id=int(gender),
+                        gender_id=int(gender_id),
                         passport_no=passport_no,
                         passport_expiry_date=passport_expiry_date,
-                        passport_issuing_authority_id=int(passport_issuing_authority),
+                        passport_issuing_authority_id=int(passport_issuing_authority_id),
                         contact=contact,
                         mail=mail,
                         address=address,
@@ -339,9 +361,19 @@ def HotelBookingCheckout(request):
             first_name = request.POST['first_name'] 
             last_name = request.POST['last_name']
             middle_name = request.POST['middle_name']
+
             nationality = request.POST['nationality']
+            splitted_nationality = nationality.split("-")
+            nationality_id = splitted_nationality[0]
+            nationality_name = splitted_nationality[1]
+
             date_of_birth = request.POST['date_of_birth']
+
             gender = request.POST['gender']
+            splitted_gender = gender.split("-")
+            gender_id = splitted_gender[0]
+            gender_type = splitted_gender[1]
+
             contact = request.POST['contact']
             mail = request.POST.get('email', False)
             total_amount = request.POST['total_amount']
@@ -354,9 +386,17 @@ def HotelBookingCheckout(request):
                 "first_name": first_name,
                 "last_name": last_name,
                 "middle_name": middle_name,
-                "nationality_id": nationality,
+
+                "nationality": {
+                    "id": nationality_id,
+                    "name": nationality_name
+                },
                 "date_of_birth": date_of_birth,
-                "gender_id": gender,
+                "gender": {
+                    "id": gender_id,
+                    "type": gender_type
+                },
+
                 "contact": contact,
                 "mail": mail,
                 "total_amount": total_amount,
@@ -368,7 +408,7 @@ def HotelBookingCheckout(request):
             hotel_checkout_info = request.session["hotel_checkout_info"]
             hotel_book = request.session["hotel_book"]
 
-            if len(contact) == 11:    
+            if len(contact) >= 11:    
 
                 if request.user.is_authenticated:
                     user_id = request.session["userId"]  
@@ -383,9 +423,9 @@ def HotelBookingCheckout(request):
                         first_name=first_name, 
                         last_name=last_name,
                         middle_name=middle_name,
-                        nationality_id=int(nationality),
+                        nationality_id=int(nationality_id),
                         date_of_birth=date_of_birth,
-                        gender_id=int(gender),
+                        gender_id=int(gender_id),
                         contact=contact,
                         mail=mail,
                         total_amount=total_amount
@@ -432,8 +472,8 @@ def Register(request):
                         )
                     user.save()
 
-                    OTGGenerator([email], "SUCCESSFUL REGISTRATION!!!", """We kindly inform you that you have sucessfully register your account on Airline-Booking""")
-                    return render(request, "login.html", {"user": user}) 
+                    OTGGenerator([email], "SUCCESSFUL REGISTRATION!!!", """We kindly inform you that you have successfully register your account on Airline-Booking. Kindly log in to proceed with your browsing experience on our website.""")
+                    return redirect("login") 
 
             else:
                 messages.error(request, 'Password not the same')
@@ -469,12 +509,15 @@ def Login(request):
                     
                     if checkout_info is not None:
                         book = request.session["book"]
+
+                        gender = Gender.objects.all().order_by('type')
+                        nations = Nations.objects.all().order_by('name')
                         
-                        OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have sucessfully login your account on Airline-Booking""")
+                        OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have successfully logged into your account on Airline-Booking""")
                         messages.success(request, 'You have successfully login')
-                        return render(request, "checkout.html", {"checking": checkout_info, "book": book})
+                        return render(request, "checkout.html", {"checking": checkout_info, "book": book, "genders": gender, "nations": nations})
                     
-                    OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have sucessfully login your account on Airline-Booking""")
+                    OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have successfully logged into your account on Airline-Booking""")
                     return redirect("home")
                     
                 elif "hotel_checkout_info" in session_keys:
@@ -482,16 +525,19 @@ def Login(request):
 
                     if hotel_checkout_info is not None:
                         hotel_book = request.session["hotel_book"]
+
+                        gender = Gender.objects.all().order_by('type')
+                        nations = Nations.objects.all().order_by('name')
                         
-                        OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have sucessfully login your account on Airline-Booking""")
+                        OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have successfully logged into your account on Airline-Booking""")
                         messages.success(request, 'You have successfully login')
-                        return render(request, "checkout.html", {"hotel_checking": hotel_checkout_info, "hotel_book": hotel_book})
+                        return render(request, "checkout.html", {"hotel_checking": hotel_checkout_info, "hotel_book": hotel_book, "genders": gender, "nations": nations})
                     
-                    OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have sucessfully login your account on Airline-Booking""")
+                    OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have successfully logged into your account on Airline-Booking""")
                     return redirect("home")
                 
                 else:
-                    OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have sucessfully login your account on Airline-Booking""")   
+                    OTGGenerator([email], "SUCCESSFUL LOGIN!!!", """We kindly inform you that you have successfully logged into your account on Airline-Booking""")   
                     return redirect("home")
             
             else:
